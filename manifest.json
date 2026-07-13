@@ -1,0 +1,17 @@
+{
+  "name": "Книга о вкусной и здоровой пище",
+  "short_name": "Вкусная пища",
+  "description": "634 рецепта из издания 1952 года — по разделам, с поиском и избранным",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1E6CC",
+  "theme_color": "#3E6B39",
+  "lang": "ru",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
