@@ -5,6 +5,20 @@
 (function(){
   'use strict';
 
+  // ---------- support / donate info ----------
+  // Впишите сюда свои реальные реквизиты — это единственное место,
+  // которое нужно поправить. Всё остальное отрисуется само.
+  var DONATE_INFO = {
+    intro_extra: '', // необязательный доп. текст, можно оставить пустым
+    items: [
+      { type:'card', label:'Банковская карта', value:'0000 0000 0000 0000', note:'скопируйте номер карты' },
+      { type:'phone', label:'СБП по номеру телефона', value:'+7 000 000-00-00', note:'скопируйте номер' },
+      { type:'link', label:'YooMoney', value:'https://yoomoney.ru/to/XXXXXXXXXXXXXXX' },
+      { type:'link', label:'Boosty', value:'https://boosty.to/XXXXXXX' },
+      { type:'crypto', label:'USDT (TRC20)', value:'TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', note:'скопируйте адрес кошелька' }
+    ]
+  };
+
   // ---------- category meta: color + icon key ----------
   var CAT_META = {
     'ХОЛОДНЫЕ БЛЮДА И ЗАКУСКИ':      {color:'#3E6B39', icon:'plate'},
@@ -143,7 +157,8 @@
     category: $('#screen-category'),
     fav: $('#screen-fav'),
     recipe: $('#screen-recipe'),
-    add: $('#screen-add')
+    add: $('#screen-add'),
+    support: $('#screen-support')
   };
   var catGrid = $('#catGrid');
   var searchInput = $('#searchInput');
@@ -179,7 +194,7 @@
     });
     backBtn.hidden = (name==='home' || name==='search' || name==='fav');
     bottomNav.style.display = 'flex';
-    fabAdd.hidden = (name==='add' || name==='recipe');
+    fabAdd.hidden = (name==='add' || name==='recipe' || name==='support');
     if(name==='home') setActiveNav('home');
     else if(name==='search') setActiveNav('search');
     else if(name==='fav') setActiveNav('fav');
@@ -206,6 +221,7 @@
 
   // ---------- renderers ----------
   function renderHome(){
+    $('#homeEyebrow').textContent = 'Пищепромиздат · 1952 · ' + ALL.length + ' рецептов';
     catGrid.innerHTML = catOrder.map(function(cat){
       var meta = CAT_META[cat] || {color:'#3E6B39', icon:'plate'};
       var count = byCat[cat].order.length;
@@ -276,6 +292,23 @@
     favRecipes.innerHTML = ids.map(function(id){ return byId[id] ? recipeCardHtml(byId[id]) : ''; }).join('');
   }
 
+  function renderSupport(){
+    var list = $('#supportList');
+    list.innerHTML = DONATE_INFO.items.map(function(item, idx){
+      var isLink = item.type === 'link';
+      var valueHtml = isLink
+        ? '<a href="'+item.value+'" target="_blank" rel="noopener">'+item.value+'</a>'
+        : '<span class="support-value">'+item.value+'</span>';
+      var copyBtn = isLink ? '' :
+        '<button type="button" class="support-copy" data-copy-idx="'+idx+'">Копировать</button>';
+      return '<div class="support-item">'+
+        '<div class="support-item-label">'+item.label+'</div>'+
+        '<div class="support-item-row">'+valueHtml+copyBtn+'</div>'+
+        (item.note ? '<div class="support-item-note">'+item.note+'</div>' : '')+
+      '</div>';
+    }).join('');
+  }
+
   function renderRecipe(){
     var r = byId[state.recipeId];
     if(!r){ goBack(); return; }
@@ -344,11 +377,27 @@
       case 'fav': showScreen('fav'); renderFav(); break;
       case 'recipe': showScreen('recipe'); renderRecipe(); break;
       case 'add': showScreen('add'); break;
+      case 'support': showScreen('support'); renderSupport(); break;
     }
   }
 
   // ---------- event delegation ----------
   document.addEventListener('click', function(e){
+    var copyBtn = e.target.closest('[data-copy-idx]');
+    if(copyBtn){
+      var item = DONATE_INFO.items[parseInt(copyBtn.dataset.copyIdx,10)];
+      var finish = function(ok){
+        var original = copyBtn.textContent;
+        copyBtn.textContent = ok ? 'Скопировано' : 'Не вышло';
+        setTimeout(function(){ copyBtn.textContent = original; }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(item.value).then(function(){ finish(true); }).catch(function(){ finish(false); });
+      } else {
+        finish(false);
+      }
+      return;
+    }
     var openBtn = e.target.closest('[data-open]');
     if(openBtn){
       go({screen:'recipe', recipeId:parseInt(openBtn.dataset.open,10), cat:state.cat, sub:state.sub});
@@ -387,6 +436,7 @@
 
   backBtn.addEventListener('click', function(){ history.back(); });
   favBtnTop.addEventListener('click', function(){ go({screen:'fav'}); });
+  $('#supportLink').addEventListener('click', function(){ go({screen:'support'}); });
 
   var searchDebounce;
   searchInput.addEventListener('input', function(){

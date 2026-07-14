@@ -50,9 +50,21 @@
 
     <!-- Screen: Categories (home) -->
     <section id="screen-home" class="screen">
-      <p class="eyebrow">Пищепромиздат · 1952 · 634 рецепта</p>
+      <p class="eyebrow" id="homeEyebrow">Пищепромиздат · 1952</p>
       <div class="cat-grid" id="catGrid"></div>
+      <button class="support-link" id="supportLink">
+        <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.5-8.8C.7 7.6 2.4 4 6 4c2 0 3.3 1 4 2.3C10.7 5 12 4 14 4c3.6 0 5.3 3.6 3.5 7.2C19 15.65 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Поддержать автора приложения</span>
+      </button>
       <p class="colophon">Оцифровано из семейного экземпляра книги.<br>Разделы и рецепты приведены по оригинальному изданию.</p>
+    </section>
+
+    <!-- Screen: Support / donate -->
+    <section id="screen-support" class="screen" hidden>
+      <p class="eyebrow">От автора</p>
+      <h2 class="screen-title">Поддержать приложение</h2>
+      <p class="support-intro">Если приложением приятно пользоваться и хочется сказать спасибо — вот несколько способов. Любая сумма — уже приятно, и совершенно необязательно.</p>
+      <div class="support-list" id="supportList"></div>
     </section>
 
     <!-- Screen: Search results -->

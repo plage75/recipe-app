@@ -1,6 +1,6 @@
 // Service worker: cache-first for the app shell + data, so the book
 // works fully offline after the first visit.
-const CACHE = 'kniga1952-v3';
+const CACHE = 'kniga1952-v4';
 const ASSETS = [
   './',
   './index.html',
